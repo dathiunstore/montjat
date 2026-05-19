@@ -3,7 +3,7 @@
     <p style="text-align: center; color: #888; margin-bottom: 25px;">ادخل البيانات لتوليد كارت مخصص، أو انسخ النظام الثلاثي الجاهز فوراً</p>
     
     <div class="quick-actions">
-        <button class="triple-btn" onclick="copyTripleCode()">📋 نسخ كود الـ 3 كروت الجاهزة (توهج ناري)</button>
+        <button class="triple-btn" onclick="copyTripleCode()">📋 نسخ كود الـ 3 كروت الجاهزة (توهج ناري + د.ع)</button>
     </div>
     
     <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
@@ -14,8 +14,8 @@
     </div>
     
     <div class="form-group">
-        <label>2. السعر (بالدينار العراقي):</label>
-        <input type="text" id="prodPrice" placeholder="مثال: 25,000 د.ع">
+        <label>2. السعر (اكتب الرقم فقط):</label>
+        <input type="text" id="prodPrice" placeholder="مثال: 25,000">
     </div>
     
     <div class="form-group">
@@ -38,7 +38,6 @@
 <script>
 let base64Image = "";
 
-// تحويل الصورة المرفوعة إلى كود Base64
 function previewImage(event) {
     const reader = new FileReader();
     reader.onload = function() {
@@ -50,10 +49,15 @@ function previewImage(event) {
     reader.readAsDataURL(event.target.files[0]);
 }
 
-// دالة توليد كارت مخصص مفرد مع التوهج الناري الجديد
+// توليد الكارت المفرد مع إضافة العملة تلقائياً
 function generateProductCode() {
     const name = document.getElementById('prodName').value || "مجسم مخصص هيبة";
-    const price = document.getElementById('prodPrice').value || "السعر حسب الطلب";
+    let price = document.getElementById('prodPrice').value || "السعر حسب الطلب";
+    
+    // إذا كان السعر يحتوي على أرقام فقط، نضيف له العملة تلقائياً بتنسيق فخم
+    if (price !== "السعر حسب الطلب" && !price.includes("د.ع") && !price.includes("دينار")) {
+        price = price + " د.ع";
+    }
     
     if(!base64Image) {
         alert("يا وحش ارفع صورة المجسم أولاً حتى يكتمل السحر!");
@@ -66,7 +70,7 @@ function generateProductCode() {
     </div>
     <div class="product-info" style="padding: 25px; text-align: center; color: #fff;">
         <h3 style="margin: 0 0 12px 0; font-size: 1.4rem; font-weight: 700;">${name}</h3>
-        <p class="price" style="color: #ffaa00; font-weight: bold; font-size: 1.3rem; margin-bottom: 22px;">${price}</p>
+        <p class="price" style="color: #ffaa00; font-weight: bold; font-size: 1.3rem; margin-bottom: 22px; text-shadow: 0 0 10px rgba(255, 170, 0, 0.3);">${price}</p>
         <a href="https://wa.me/9647710705445?text=مرحبا_داثيون_ستور_اريد_اطلب_${encodeURIComponent(name)}" target="_blank" style="display: block; background: linear-gradient(45deg, #ff5100, #ffaa00); color: #000000 !important; text-decoration: none !important; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 1rem; box-shadow: 0 4px 15px rgba(255, 81, 0, 0.2);">اطلب عبر الواتساب السريع 💬</a>
     </div>
 </div>`;
@@ -82,7 +86,7 @@ function copyTheCode() {
     alert("تم نسخ كود الكارت المخصص بنجاح!");
 }
 
-// دالة نسخ كود الـ 3 كروت النارية الجاهزة بضغطة زر واحدة
+// كود الـ 3 كروت مع إضافة العملة "د.ع" وتوهج ناري كامل لكل كارت
 function copyTripleCode() {
     const tripleHTML = `<div class="dathiun-container" style="background-color: #0d0d0d; padding: 60px 20px; font-family: 'Segoe UI', sans-serif; direction: rtl; width: 100%;">
     <h2 style="text-align: center; color: #ffffff; font-size: 2.2rem; margin-bottom: 40px; font-weight: 800; text-shadow: 0 0 15px rgba(255, 81, 0, 0.5);">المعرض الفني لـ DATHIUN ☣️</h2>
@@ -92,7 +96,7 @@ function copyTripleCode() {
             <div style="width: 100%; height: 280px; overflow: hidden; background: #000;"><img src="https://images.unsplash.com/photo-1608889174637-3c44f6326f20?w=500" style="width: 100%; height: 100%; object-fit: cover;" alt="Product 1"></div>
             <div style="padding: 25px; text-align: center; color: #fff;">
                 <h3 style="margin: 0 0 12px 0; font-size: 1.4rem; font-weight: 700;">ستاند ريزدنت إيفل مخصص ☣️</h3>
-                <p style="color: #ffaa00; font-weight: bold; font-size: 1.3rem; margin-bottom: 22px;">25,000 د.ع</p>
+                <p style="color: #ffaa00; font-weight: bold; font-size: 1.3rem; margin-bottom: 22px; text-shadow: 0 0 10px rgba(255, 170, 0, 0.3);">25,000 د.ع</p>
                 <a href="https://wa.me/9647710705445?text=مرحبا_داثيون_ستور_اريد_اطلب_ستاند_ريزدنت_ايفل" target="_blank" style="display: block; background: linear-gradient(45deg, #ff5100, #ffaa00); color: #000000 !important; text-decoration: none !important; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 1rem;">اطلب عبر الواتساب السريع 💬</a>
             </div>
         </div>
@@ -101,7 +105,7 @@ function copyTripleCode() {
             <div style="width: 100%; height: 280px; overflow: hidden; background: #000;"><img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=500" style="width: 100%; height: 100%; object-fit: cover;" alt="Product 2"></div>
             <div style="padding: 25px; text-align: center; color: #fff;">
                 <h3 style="margin: 0 0 12px 0; font-size: 1.4rem; font-weight: 700;">مجسم شخصية إنمي هيبة 🔥</h3>
-                <p style="color: #ffaa00; font-weight: bold; font-size: 1.3rem; margin-bottom: 22px;">35,000 د.ع</p>
+                <p style="color: #ffaa00; font-weight: bold; font-size: 1.3rem; margin-bottom: 22px; text-shadow: 0 0 10px rgba(255, 170, 0, 0.3);">35,000 د.ع</p>
                 <a href="https://wa.me/9647710705445?text=مرحبا_داثيون_ستور_اريد_اطلب_مجسم_الشخصية" target="_blank" style="display: block; background: linear-gradient(45deg, #ff5100, #ffaa00); color: #000000 !important; text-decoration: none !important; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 1rem;">اطلب عبر الواتساب السريع 💬</a>
             </div>
         </div>
@@ -110,7 +114,7 @@ function copyTripleCode() {
             <div style="width: 100%; height: 280px; overflow: hidden; background: #000;"><img src="https://images.unsplash.com/photo-1612287230202-1bf1d85d1bdf?w=500" style="width: 100%; height: 100%; object-fit: cover;" alt="Product 3"></div>
             <div style="padding: 25px; text-align: center; color: #fff;">
                 <h3 style="margin: 0 0 12px 0; font-size: 1.4rem; font-weight: 700;">قاعدة ألعاب تكتيكية 🎮</h3>
-                <p style="color: #ffaa00; font-weight: bold; font-size: 1.3rem; margin-bottom: 22px;">18,000 د.ع</p>
+                <p style="color: #ffaa00; font-weight: bold; font-size: 1.3rem; margin-bottom: 22px; text-shadow: 0 0 10px rgba(255, 170, 0, 0.3);">18,000 د.ع</p>
                 <a href="https://wa.me/9647710705445?text=مرحبا_داثيون_ستور_اريد_اطلب_القاعدة_التكتيكية" target="_blank" style="display: block; background: linear-gradient(45deg, #ff5100, #ffaa00); color: #000000 !important; text-decoration: none !important; padding: 14px; border-radius: 10px; font-weight: bold; font-size: 1rem;">اطلب عبر الواتساب السريع 💬</a>
             </div>
         </div>
@@ -127,7 +131,7 @@ function copyTripleCode() {
     dummy.select();
     document.execCommand("copy");
     document.body.removeChild(dummy);
-    alert("تم نسخ كود الـ 3 كروت المتوهجة بنجاح! يمكنك الآن لصقه مباشرة في أودو أو جيت هاب 🔥☣️");
+    alert("تم نسخ كود الـ 3 كروت المتوهجة بـ (د.ع) بنجاح! الصقه في أودو فوراً وبشرني بالنتيجة النارية! 🔥");
 }
 </script>
 

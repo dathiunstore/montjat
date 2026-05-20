@@ -1,9 +1,9 @@
 <div class="generator-container">
     <h2>☣️ لوحة تحكم DATHIUN لتوليد كروت المنتجات ☣️</h2>
-    <p style="text-align: center; color: #888; margin-bottom: 25px;">ادخل البيانات لتوليد كارت مخصص، أو انسخ النظام الثلاثي الجاهز فوراً</p>
+    <p style="text-align: center; color: #888; margin-bottom: 25px;">ادخل البيانات لتوليد كارت مخصص، أو انسخ النظام الرباعي الجاهز فوراً</p>
     
     <div class="quick-actions">
-        <button class="triple-btn" onclick="copyTripleCode()">📋 نسخ كود الـ 3 كروت الجاهزة (كارتين بالموبايل)</button>
+        <button class="triple-btn" onclick="copyQuadCode()">📋 نسخ كود الـ 4 كروت الجاهزة (2 تحت 2 بالموبايل)</button>
     </div>
     
     <hr style="border: 0; border-top: 1px solid #333; margin: 25px 0;">
@@ -49,7 +49,7 @@ function previewImage(event) {
     reader.readAsDataURL(event.target.files[0]);
 }
 
-// توليد الكارت المفرد مع المظهر المتجاوب الجديد (كارتين بالموبايل)
+// توليد كارت مخصص مفرد متوافق مع نفس النظام
 function generateProductCode() {
     const name = document.getElementById('prodName').value || "مجسم مخصص هيبة";
     let price = document.getElementById('prodPrice').value || "السعر حسب الطلب";
@@ -63,7 +63,6 @@ function generateProductCode() {
         return;
     }
 
-    // الكود هنا يستعمل الفئات (Classes) المدمجة بالـ Style الأساسي في الأسفل لضمان عمل الموبايل 100%
     const generatedHTML = `<div class="product-card" onmouseover="this.style.transform='translateY(-12px) scale(1.02)'; this.style.borderColor='#ff5100'; this.style.boxShadow='0 20px 40px rgba(255, 68, 0, 0.45), 0 0 25px rgba(255, 166, 0, 0.35), 0 0 50px rgba(255, 68, 0, 0.15)';" onmouseout="this.style.transform='none'; this.style.borderColor='#222'; this.style.boxShadow='0 10px 30px rgba(255, 68, 0, 0.25), 0 0 15px rgba(255, 136, 0, 0.15)';">
     <div class="img-container">
         <img src="${base64Image}" alt="Product">
@@ -86,9 +85,9 @@ function copyTheCode() {
     alert("تم نسخ كود الكارت المخصص بنجاح!");
 }
 
-// كود الـ 3 كروت مع التعديل الجذري ليصبح كارتين بجانب بعض في شاشات الموبايل
-function copyTripleCode() {
-    const tripleHTML = `<div class="dathiun-container">
+// كود النظام الرباعي المغلق (2 تحت 2 بالموبايل و 4 بجانب بعض بالحاسبة)
+function copyQuadCode() {
+    const quadHTML = `<div class="dathiun-container">
     <h2 class="dathiun-title">المعرض الفني لـ DATHIUN ☣️</h2>
     <div class="dathiun-gallery">
         
@@ -119,45 +118,53 @@ function copyTripleCode() {
             </div>
         </div>
 
+        <div class="product-card">
+            <div class="img-container"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500" alt="Product 4"></div>
+            <div class="product-info">
+                <h3>مجسم تكتيكي مخصص ☣️</h3>
+                <p class="price">30,000 د.ع</p>
+                <a href="https://wa.me/9647710705445?text=مرحبا_داثيون_ستور_اريد_اطلب_مجسم_تكتيكي" target="_blank" class="whatsapp-btn">اطلب عبر الواتساب 💬</a>
+            </div>
+        </div>
+
     </div>
 </div>
 
 <style>
 .dathiun-container { background-color: #0d0d0d; padding: 40px 10px; font-family: 'Segoe UI', sans-serif; direction: rtl; width: 100%; box-sizing: border-box; }
 .dathiun-title { text-align: center; color: #ffffff; font-size: 2rem; margin-bottom: 30px; font-weight: 800; text-shadow: 0 0 15px rgba(255, 81, 0, 0.5); }
-.dathiun-gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1200px; margin: 0 auto; }
+.dathiun-gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1400px; margin: 0 auto; }
 
-/* التصميم الأساسي للكارت (الحاسبة) */
-.product-card { background: #141414; border: 1px solid #222; border-radius: 16px; width: 320px; overflow: hidden; box-shadow: 0 10px 30px rgba(255, 68, 0, 0.25), 0 0 15px rgba(255, 136, 0, 0.15); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; }
+/* عرض الكروت بالحاسبة (أربعة بجانب بعض بشكل متناسق) */
+.product-card { background: #141414; border: 1px solid #222; border-radius: 16px; width: 280px; overflow: hidden; box-shadow: 0 10px 30px rgba(255, 68, 0, 0.25), 0 0 15px rgba(255, 136, 0, 0.15); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; }
 .product-card:hover { transform: translateY(-12px) scale(1.02); border-color: #ff5100; box-shadow: 0 20px 40px rgba(255, 68, 0, 0.45), 0 0 25px rgba(255, 166, 0, 0.35), 0 0 50px rgba(255, 68, 0, 0.15); }
-.img-container { width: 100%; height: 280px; overflow: hidden; background: #000; }
+.img-container { width: 100%; height: 260px; overflow: hidden; background: #000; }
 .img-container img { width: 100%; height: 100%; object-fit: cover; }
 .product-info { padding: 20px; text-align: center; color: #fff; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
-.product-info h3 { margin: 0 0 10px 0; font-size: 1.3rem; font-weight: 700; line-height: 1.4; }
-.product-info class .price { color: #ffaa00; font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255, 170, 0, 0.3); }
+.product-info h3 { margin: 0 0 10px 0; font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
+.product-info .price { color: #ffaa00; font-weight: bold; font-size: 1.15rem; margin-bottom: 15px; text-shadow: 0 0 10px rgba(255, 170, 0, 0.3); }
 .whatsapp-btn { display: block; background: linear-gradient(45deg, #ff5100, #ffaa00); color: #000000 !important; text-decoration: none !important; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(255, 81, 0, 0.2); }
 
-/* السحر الحقيقي للموبايل: ترتيب كارتين بجانب بعض وتصغير متناسق */
+/* ترتيب الموبايل: اثنين تحت اثنين بالملي */
 @media (max-width: 768px) {
     .dathiun-gallery { gap: 10px; padding: 0 5px; }
-    /* جعل العرض 47% لكي يجلس كارتين وبينهما مسافة */
     .product-card { width: 47%; border-radius: 12px; }
-    .img-container { height: 160px; } /* تقليل ارتفاع الصورة لتناسب الموبايل */
+    .img-container { height: 150px; }
     .product-info { padding: 12px; }
-    .product-info h3 { font-size: 0.95rem; margin-bottom: 6px; }
-    .product-info .price { font-size: 0.9rem; margin-bottom: 10px; }
-    .whatsapp-btn { padding: 8px 5px; font-size: 0.8rem; border-radius: 6px; }
+    .product-info h3 { font-size: 0.9rem; margin-bottom: 6px; }
+    .product-info .price { font-size: 0.85rem; margin-bottom: 10px; }
+    .whatsapp-btn { padding: 8px 5px; font-size: 0.75rem; border-radius: 6px; }
     .dathiun-title { font-size: 1.5rem; }
 }
 </style>`;
 
     const dummy = document.createElement("textarea");
     document.body.appendChild(dummy);
-    dummy.value = tripleHTML;
+    dummy.value = quadHTML;
     dummy.select();
     document.execCommand("copy");
     document.body.removeChild(dummy);
-    alert("تم نسخ كود النظام المرن (كارتين بالموبايل وبجانب بعض) بنجاح! جربه الآن 🔥");
+    alert("تم نسخ نظام الـ 4 كروت (2 تحت 2 بالموبايل) بنجاح! طيران وضعه بأودو 😉🚀");
 }
 </script>
 

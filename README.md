@@ -20,6 +20,7 @@
     <input type="text" id="priceInput" placeholder="السعر">
     <select id="catInput">
         <option value="weapons">أسلحة</option>
+        <option value="stands">ستاندات</option>
         <option value="masks">أقنعة</option>
         <option value="keycaps">كيكابس</option>
         <option value="figures">مجسمات</option>

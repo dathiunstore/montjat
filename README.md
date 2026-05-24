@@ -2,25 +2,18 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مولد كروت DATHIUN الاحترافي</title>
+    <title>مولد كروت DATHIUN النهائي</title>
     <style>
         body { font-family: sans-serif; background: #111; color: white; padding: 20px; }
         .container { max-width: 600px; margin: auto; background: #222; padding: 20px; border-radius: 10px; }
         input, select, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; }
         button { background: #ff4500; color: white; font-weight: bold; cursor: pointer; }
         #copyBtn { background: #25d366; display: none; margin-top: 10px; }
-        
-        /* تنسيق الكارت النهائي */
-        .fire-card { width: 250px; padding: 15px; background: #000; border: 2px solid #ff4500; border-radius: 15px; box-shadow: 0 0 20px #ff4500, 0 0 40px #ff8c00; text-align: center; color: #ffcc00; margin: 20px auto; }
-        .fire-card img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; }
-        .fire-card h3 { color: #ffffff; margin: 10px 0; font-size: 20px; }
-        .fire-card p { font-size: 19px; color: #ffcc00; font-weight: bold; margin-bottom: 10px; }
-        .fire-btn { display: block; background: linear-gradient(to right, #ff4500, #ff8c00); color: #000000 !important; padding: 10px; text-decoration: none; border-radius: 5px; margin-top: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>مولد كروت DATHIUN</h2>
+        <h2>مولد كروت DATHIUN (النسخة المتوافقة)</h2>
         <input type="file" id="imgInput" accept="image/*">
         <input type="text" id="nameInput" placeholder="اسم المنتج">
         <input type="text" id="priceInput" placeholder="السعر">
@@ -35,8 +28,7 @@
             <option value="others">أخرى</option>
         </select>
         <button onclick="generateCard()">توليد الكود</button>
-        
-        <div id="output"></div>
+        <textarea id="output" rows="5" style="width:100%; margin-top:10px; background:#000; color:#0f0; border:none; padding:10px; display:none;"></textarea>
         <button id="copyBtn" onclick="copyCode()">📋 نسخ الكود</button>
     </div>
 
@@ -57,7 +49,7 @@
             const price = convertToEnglishNumbers(document.getElementById('priceInput').value);
             const cat = document.getElementById('categoryInput').value;
             
-            if(!file) { alert("يرجى اختيار صورة أولاً!"); return; }
+            if(!file) { alert("يرجى اختيار صورة!"); return; }
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -70,22 +62,16 @@
                     ctx.drawImage(img, (img.width-size)/2, (img.height-size)/2, size, size, 0, 0, 300, 300);
                     const compressedUrl = canvas.toDataURL('image/jpeg', 0.6); 
 
-                    // إضافة loading="lazy" لضمان سرعة الموقع
-                    const fullHtml = `<style>
-                        .fire-card { width: 250px; padding: 15px; background: #000; border: 2px solid #ff4500; border-radius: 15px; box-shadow: 0 0 20px #ff4500, 0 0 40px #ff8c00; text-align: center; color: #ffcc00; margin: 20px auto; }
-                        .fire-card img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; }
-                        .fire-card h3 { color: #ffffff; margin: 10px 0; font-size: 20px; }
-                        .fire-card p { font-size: 19px; color: #ffcc00; font-weight: bold; margin-bottom: 10px; }
-                        .fire-btn { display: block; background: linear-gradient(to right, #ff4500, #ff8c00); color: #000000 !important; padding: 10px; text-decoration: none; border-radius: 5px; margin-top: 10px; font-weight: bold; }
-                    </style>
-                    <div class="fire-card" data-category="${cat}">
-                        <img src="${compressedUrl}" loading="lazy">
-                        <h3>${name}</h3>
-                        <p>${price} د.ع</p>
-                        <a href="https://wa.me/9647710705445?text=اريد طلب ${name} بسعر ${price} د.ع" class="fire-btn">💬 اطلبه الآن من الواتساب</a>
-                    </div>`;
+                    // الكود المولد الآن متوافق تماماً مع كود المعرض الجديد
+                    const fullHtml = `<div class="fire-card" data-category="${cat}">
+    <img src="${compressedUrl}" loading="lazy">
+    <h3>${name}</h3>
+    <p>${price} د.ع</p>
+    <a href="https://wa.me/9647710705445?text=اريد طلب ${name} بسعر ${price} د.ع" class="fire-btn">💬 اطلبه الآن من الواتساب</a>
+</div>`;
                     
-                    document.getElementById('output').innerHTML = fullHtml;
+                    document.getElementById('output').style.display = 'block';
+                    document.getElementById('output').value = fullHtml;
                     document.getElementById('copyBtn').style.display = 'block';
                     window.currentHtml = fullHtml;
                 };
@@ -95,9 +81,9 @@
         }
 
         function copyCode() {
-            navigator.clipboard.writeText(window.currentHtml).then(() => {
-                alert("تم نسخ الكود! اذهب للموقع وألصقه داخل بلوك HTML.");
-            });
+            document.getElementById('output').select();
+            document.execCommand('copy');
+            alert("تم نسخ الكود! اذهب لصفحة المعرض وألصقه داخل الـ product-gallery.");
         }
     </script>
 </body>

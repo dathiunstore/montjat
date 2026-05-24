@@ -10,7 +10,6 @@
         button { background: #ff4500; color: white; font-weight: bold; cursor: pointer; }
         #copyBtn { background: #25d366; display: none; margin-top: 10px; }
         
-        /* تنسيق الأداة نفسها */
         .fire-card { width: 250px; padding: 15px; background: #000; border: 2px solid #ff4500; border-radius: 15px; box-shadow: 0 0 20px #ff4500, 0 0 40px #ff8c00; text-align: center; color: #ffcc00; margin: 20px auto; }
         .fire-card img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; }
         .fire-card h3 { color: #ffffff; margin: 10px 0; font-size: 20px; }
@@ -28,6 +27,7 @@
             <option value="figures">مجسمات</option>
             <option value="stands">ستاندات</option>
             <option value="weapons">أسلحة</option>
+            <option value="keycaps">كيكابس</option>
             <option value="masks">أقنعة</option>
             <option value="keychains">ميداليات</option>
             <option value="stickers">ستيكرات</option>

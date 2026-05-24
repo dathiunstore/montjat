@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مولد DATHIUN الاحترافي</title>
+    <title>مولد كروت DATHIUN المتكامل</title>
     <style>
         body { font-family: sans-serif; background: #111; color: white; padding: 20px; }
         .container { max-width: 600px; margin: auto; background: #222; padding: 20px; border-radius: 10px; }
@@ -14,8 +14,8 @@
 </head>
 <body>
     <div class="container">
-        <h2>مولد DATHIUN</h2>
-        <button id="copyStyleBtn" onclick="copyStyle()">🎨 نسخ كود الستايل (CSS المتوافق)</button>
+        <h2>مولد كروت DATHIUN</h2>
+        <button id="copyStyleBtn" onclick="copyStyle()">🎨 نسخ كود الستايل (CSS)</button>
         <hr style="border:0; border-top:1px solid #444; margin:20px 0;">
 
         <input type="file" id="imgInput" accept="image/*">
@@ -38,7 +38,6 @@
     </div>
 
     <script>
-        // هذا هو الستايل المحدث والمتوافق مع الجوال
         const styleCode = `<style>
     .filter-menu { text-align: center; margin-bottom: 40px; }
     .btn-all { font-size: 22px; font-weight: bold; color: #fff; background: linear-gradient(to right, #ff4500, #ff8c00); border: none; padding: 12px 40px; cursor: pointer; border-radius: 50px; box-shadow: 0 0 10px #ff4500; transition: 0.3s; }
@@ -48,14 +47,14 @@
     .product-gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; padding: 10px; }
     .fire-card { width: calc(50% - 15px); max-width: 250px; padding: 10px; background: #000; border: 2px solid #ff4500; border-radius: 15px; box-shadow: 0 0 10px rgba(255, 69, 0, 0.3); text-align: center; color: #ffcc00; transition: transform 0.4s ease, box-shadow 0.4s ease; box-sizing: border-box; }
     .fire-card:hover { transform: scale(1.03); box-shadow: 0 0 25px rgba(255, 69, 0, 0.7); }
-    .fire-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; }
+    .fire-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 10px; }
     .fire-card h3 { color: #ffffff; margin: 8px 0; font-size: 16px; }
     .fire-card p { font-size: 15px; color: #ffcc00; font-weight: bold; margin-bottom: 8px; }
     .fire-btn { display: block; background: linear-gradient(to right, #ff4500, #ff8c00); color: #000000 !important; padding: 8px; text-decoration: none; border-radius: 5px; margin-top: 5px; font-weight: bold; font-size: 13px; }
 </style>`;
 
         function copyStyle() {
-            navigator.clipboard.writeText(styleCode).then(() => alert("تم نسخ كود الستايل!"));
+            navigator.clipboard.writeText(styleCode).then(() => alert("تم نسخ كود الستايل الاحترافي!"));
         }
 
         function convertToEnglishNumbers(str) {
@@ -76,16 +75,8 @@
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = 300; canvas.height = 300;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 300, 300);
-                    const compressedUrl = canvas.toDataURL('image/jpeg', 0.6); 
-
-                    const fullHtml = `<div class="fire-card" data-category="${cat}">
-    <img src="${compressedUrl}" loading="lazy">
+                const fullHtml = `<div class="fire-card" data-category="${cat}">
+    <img src="${e.target.result}" loading="lazy">
     <h3>${name}</h3>
     <p>${price} د.ع</p>
     <a href="https://wa.me/9647710705445?text=اريد طلب ${name} بسعر ${price} د.ع" class="fire-btn">💬 اطلبه الآن من الواتساب</a>
@@ -94,8 +85,6 @@
                     document.getElementById('output').style.display = 'block';
                     document.getElementById('output').value = fullHtml;
                     document.getElementById('copyBtn').style.display = 'block';
-                };
-                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }

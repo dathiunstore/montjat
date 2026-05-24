@@ -14,12 +14,11 @@
 <body>
 
 <div class="box">
-    <h2>مولد كروت DATHIUN</h2>
+    <h2>مولد كروت DATHIUN (مستطيل)</h2>
     <input type="file" id="imgInput" accept="image/*">
     <input type="text" id="nameInput" placeholder="اسم المنتج">
     <input type="text" id="priceInput" placeholder="السعر">
     <select id="catInput">
-        <option value="all">الكل</option>
         <option value="weapons">أسلحة</option>
         <option value="masks">أقنعة</option>
         <option value="keycaps">كيكابس</option>
@@ -42,6 +41,7 @@ function generate() {
     reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
+            // معالجة الصورة لتكون مربعة ومقصوفة
             const canvas = document.createElement('canvas');
             canvas.width = 600; canvas.height = 600;
             const ctx = canvas.getContext('2d');
@@ -57,7 +57,7 @@ function generate() {
     <img src="${dataUrl}" loading="lazy">
     <h3>${name}</h3>
     <p>${price} د.ع</p>
-    <a href="https://wa.me/9647710705445?text=اريد طلب ${name} بسعر ${price} د.ع" class="fire-btn">اطلبها الآن من الواتساب</a>
+    <a href="https://wa.me/9647710705445?text=اريد طلب ${name} بسعر ${price} د.ع" class="fire-btn">اطلبه الآن من الواتساب 💬</a>
 </div>`;
             document.getElementById('output').style.display = 'block';
             document.getElementById('output').value = code;
@@ -76,13 +76,31 @@ function copyCode() {
 </script>
 
 <style id="fire-style">
-    .product-grid { display: flex; flex-wrap: wrap; gap: 15px; padding: 20px; justify-content: center; }
-    .fire-card { width: calc(25% - 15px); min-width: 150px; background: #000; border: 2px solid #ff4500; border-radius: 15px; padding: 10px; text-align: center; box-shadow: 0 0 10px rgba(255,69,0,0.3); transition: 0.4s; }
+    /* الحاوية الكبيرة */
+    .product-grid { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; justify-content: center; }
+    
+    /* الكرت مستطيل طولي (نسبة 4:6 تقريباً) */
+    .fire-card { 
+        width: calc(25% - 20px); 
+        min-width: 200px; 
+        aspect-ratio: 4/6; 
+        background: #000; 
+        border: 2px solid #ff4500; 
+        border-radius: 15px; 
+        padding: 15px; 
+        text-align: center; 
+        box-shadow: 0 0 10px rgba(255,69,0,0.3); 
+        transition: 0.4s; 
+        display: flex; flex-direction: column; justify-content: space-between;
+    }
     .fire-card:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(255,69,0,0.7); }
+    
+    /* الصورة المربعة داخل المستطيل */
     .fire-card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 10px; }
+    
     .fire-card h3 { color: #fff; font-size: 18px; margin: 10px 0; }
     .fire-card p { color: #ffcc00; font-weight: bold; font-size: 16px; margin-bottom: 10px; }
-    .fire-btn { display: block; background: linear-gradient(to right, #ff4500, #ff8c00); color: #000; padding: 8px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 14px; }
+    .fire-btn { display: block; background: linear-gradient(to right, #ff4500, #ff8c00); color: #000; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 14px; margin-top: auto; }
 </style>
 </body>
 </html>

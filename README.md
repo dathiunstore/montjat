@@ -26,6 +26,7 @@
         <option value="figures">مجسمات</option>
         <option value="stickers">ستيكرات</option>
         <option value="keychains">ميداليات</option>
+        <option value="Paintings">لوحات</option>
         <option value="others">أخرى</option>
     </select>
     <button onclick="generate()">توليد الكود</button>

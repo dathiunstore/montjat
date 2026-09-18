@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DATHIUN — مولّد كروت المنتجات</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090909;color:#fff;font-family:"Segoe UI",Tahoma,sans-serif}
+.generator-container{
+    background:#121212;border:2px dashed #ff5100;border-radius:16px;
+    padding:30px;max-width:600px;margin:40px auto;color:#fff;
+    box-shadow:0 10px 30px rgba(0,0,0,.5)
+}
+.generator-container h2{color:#ffaa00;text-align:center;font-size:1.6rem;margin:0 0 10px}
+.generator-container>p{text-align:center;color:#888}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;margin-bottom:8px;font-weight:bold;color:#ddd}
+.form-group input[type=text],.form-group select{
+    width:100%;padding:12px;background:#222;border:1px solid #404040;
+    border-radius:8px;color:#fff;font-size:1rem
+}
+.form-group input[type=file]{
+    background:#222;padding:10px;border-radius:8px;width:100%;
+    border:1px solid #404040;color:#ccc
+}
+.img-preview-box{text-align:center}
+#preview{display:none;max-width:100%;max-height:200px;border-radius:8px;margin:10px auto}
+.image-size{color:#888;font-size:13px;text-align:center;margin-top:7px}
+.gen-btn,.copy-btn{
+    width:100%;border:0;padding:15px;font-weight:bold;border-radius:8px;cursor:pointer
+}
+.gen-btn{background:linear-gradient(45deg,#ff5100,#ffaa00);color:#000;font-size:1.1rem}
+.gen-btn:hover{transform:translateY(-2px);box-shadow:0 5px 20px rgba(255,81,0,.4)}
+.output-section{
+    margin-top:30px;background:#050505;padding:20px;border-radius:10px;border:1px solid #333
+}
+.output-section textarea{
+    width:100%;height:220px;background:#111;color:#00ffcc;border:1px solid #444;
+    border-radius:8px;padding:10px;font-family:monospace;font-size:.82rem;resize:vertical;margin-top:10px
+}
+.copy-btn{background:#00ffcc;color:#000;margin-top:10px}
+.status{text-align:center;color:#aaa;font-size:13px;margin-top:10px;min-height:18px}
+</style>
+</head>
+<body>
+
+<div class="generator-container">
+    <h2>☣️ لوحة تحكم DATHIUN لتوليد كروت المنتجات ☣️</h2>
+    <p>أدخل البيانات هنا، واضغط توليد لإخراج كود الكارت الجاهز</p>
+
+    <div class="form-group">
+        <label>1. اسم المنتج:</label>
+        <input type="text" id="prodName" placeholder="مثال: ستاند ريزدنت إيفل مخصص">
+    </div>
+
+    <div class="form-group">
+        <label>2. السعر (بالدينار العراقي):</label>
+        <input type="text" id="prodPrice" placeholder="مثال: 25,000 د.ع">
+    </div>
+
+    <div class="form-group">
+        <label>3. التصنيف:</label>
+        <select id="prodCategory">
+            <option value="weapons">أسلحة</option>
+            <option value="masks">أقنعة</option>
+            <option value="stands">ستاندات</option>
+            <option value="keycaps">كيكابس</option>
+            <option value="figures" selected>مجسمات</option>
+            <option value="stickers">ستيكرات</option>
+            <option value="keychains">ميداليات</option>
+            <option value="Paintings">لوحات</option>
+            <option value="others">أخرى</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>4. ارفع صورة المنتج:</label>
+        <input type="file" id="prodImage" accept="image/*" onchange="previewImage(event)">
+        <div class="img-preview-box">
+            <img id="preview" src="#" alt="معاينة الصورة">
+            <div id="imageSize" class="image-size"></div>
+        </div>
+    </div>
+
+    <button class="gen-btn" onclick="generateProductCode()">🔥 توليد الكود الناري</button>
+    <div id="status" class="status"></div>
+
+    <div class="output-section" id="outputArea" style="display:none">
+        <h3>📋 الكود الجاهز للكارت:</h3>
+        <textarea id="resultCode" readonly onclick="this.select()"></textarea>
+        <button class="copy-btn" onclick="copyTheCode()">اضغط هنا لنسخ الكود 📑</button>
+    </div>
+</div>
+
+<script>
+let base64Image = "";
+let originalBytes = 0;
+
+function formatBytes(bytes){
+    if(bytes < 1024) return bytes + " B";
+    if(bytes < 1024*1024) return (bytes/1024).toFixed(1) + " KB";
+    return (bytes/(1024*1024)).toFixed(2) + " MB";
+}
+
+function compressImage(file, maxWidth=1200, quality=.82){
+    return new Promise((resolve,reject)=>{
+        const img = new Image();
+        const reader = new FileReader();
+
+        reader.onload = e => {
+            img.onload = () => {
+                let w = img.naturalWidth, h = img.naturalHeight;
+                if(w > maxWidth){
+                    h = Math.round(h * maxWidth / w);
+                    w = maxWidth;
+                }
+
+                const canvas = document.createElement("canvas");
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img,0,0,w,h);
+
+                // JPEG keeps the generated card much smaller than embedding
+                // the original high-resolution photo.
+                resolve(canvas.toDataURL("image/jpeg", quality));
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+async function previewImage(event){
+    const file = event.target.files[0];
+    if(!file) return;
+
+    originalBytes = file.size;
+    const status = document.getElementById("status");
+    status.textContent = "⏳ جاري تصغير وضغط الصورة...";
+
+    try{
+        base64Image = await compressImage(file);
+        const output = document.getElementById("preview");
+        output.src = base64Image;
+        output.style.display = "block";
+
+        const compressedBytes = Math.round((base64Image.length - base64Image.indexOf(",") - 1) * 0.75);
+        document.getElementById("imageSize").textContent =
+            "الأصل: " + formatBytes(originalBytes) +
+            "  →  النسخة المستخدمة: " + formatBytes(compressedBytes);
+
+        status.textContent = "✅ تم تجهيز صورة خفيفة للكارت";
+    }catch(e){
+        base64Image = "";
+        status.textContent = "❌ تعذر معالجة الصورة";
+    }
+}
+
+function escapeHtml(value){
+    return value.replace(/[&<>"']/g, c => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[c]));
+}
+
+function generateProductCode(){
+    const name = document.getElementById("prodName").value.trim() || "مجسم مخصص هيبة";
+    const price = document.getElementById("prodPrice").value.trim() || "السعر حسب الطلب";
+    const category = document.getElementById("prodCategory").value;
+
+    if(!base64Image){
+        alert("يا وحش ارفع صورة المنتج أولاً حتى يكتمل السحر!");
+        return;
+    }
+
+    const safeName = escapeHtml(name);
+    const safePrice = escapeHtml(price);
+
+    const generatedHTML = `<div class="fire-card" data-category="${category}">
+    <img src="${base64Image}" alt="${safeName}">
+    <h3>${safeName}</h3>
+    <p>${safePrice}</p>
+    <a class="fire-btn" href="https://wa.me/9647710705445?text=مرحبا_داثيون_ستور_اريد_اطلب_${encodeURIComponent(name)}" target="_blank" rel="noopener">اطلب عبر الواتساب السريع 💬</a>
+</div>`;
+
+    document.getElementById("resultCode").value = generatedHTML;
+    document.getElementById("outputArea").style.display = "block";
+    document.getElementById("status").textContent = "✅ تم توليد الكارت — التصنيف: " + category;
+}
+
+function copyTheCode(){
+    const copyText = document.getElementById("resultCode");
+    copyText.select();
+    document.execCommand("copy");
+    alert("تم نسخ الكود بنجاح! الصقه في مكان كارت المنتج.");
+}
+</script>
+</body>
+</html>

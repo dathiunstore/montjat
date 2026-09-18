@@ -28,113 +28,323 @@ button{border:0;border-radius:9px;padding:11px 14px;cursor:pointer;font-weight:b
 .product img{width:80px;height:65px;object-fit:cover;border-radius:8px}
 .product h3{margin:0 0 5px;font-size:16px}.meta{font-size:13px;color:#aaa}
 .actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
-.status{font-size:12px;margin-top:8px;text-align:center;color:#aaa}
+.status{font-size:12px;margin-top:8px;text-align:center;color:#aaa;min-height:18px}
 .badge{display:inline-block;padding:3px 7px;border-radius:99px;background:#2b1a0a;color:#ffb000}
 .hidden{opacity:.45}
+.auth{max-width:430px;margin:80px auto;background:#0e0e0e;border:2px solid #333;border-radius:16px;padding:24px}
+.auth h2{text-align:center;color:var(--orange);margin-top:0}
+.auth .primary{margin-top:18px}
+.logout{float:left}
+.connection{font-size:12px;text-align:center;color:#777;margin-top:8px}
 @media(max-width:800px){.grid{grid-template-columns:1fr}.product{grid-template-columns:65px 1fr}.product img{width:65px;height:58px}.actions{grid-column:1/-1;justify-content:stretch}.actions button{flex:1}}
 </style>
 </head>
 <body>
+
+<div id="loginView" class="auth">
+  <h2>☣️ DATHIUN ADMIN ☣️</h2>
+  <div class="sub">تسجيل دخول لوحة إدارة المنتجات</div>
+  <label>الإيميل</label>
+  <input id="email" type="email" autocomplete="username" placeholder="admin@email.com">
+  <label>كلمة المرور</label>
+  <input id="password" type="password" autocomplete="current-password" placeholder="••••••••">
+  <button class="primary" id="loginBtn">🔐 تسجيل الدخول</button>
+  <div class="status" id="loginStatus"></div>
+  <div class="connection">Supabase متصل — البيانات محفوظة أونلاين</div>
+</div>
+
+<div id="adminView" style="display:none">
 <div class="wrap">
-<h1>☣️ DATHIUN — لوحة إدارة المنتجات ☣️</h1>
-<div class="sub">إضافة وتعديل وإخفاء وحذف المنتجات — مع ضغط الصور تلقائياً</div>
+  <button class="ghost logout" id="logoutBtn">خروج</button>
+  <h1>☣️ DATHIUN — لوحة إدارة المنتجات ☣️</h1>
+  <div class="sub">إضافة وتعديل وإخفاء وحذف المنتجات — الصور تُضغط قبل الرفع</div>
 
-<div class="grid">
-<section class="panel">
-<h2 id="formTitle">➕ إضافة منتج</h2>
-<label>اسم المنتج</label>
-<input id="name" placeholder="مثلاً: ميدالية رزدنت ايفل">
-<label>السعر</label>
-<input id="price" placeholder="مثلاً: 15,000 د.ع">
-<label>التصنيف</label>
-<select id="category">
-<option value="weapons">أسلحة</option><option value="masks">أقنعة</option><option value="stands">ستاندات</option>
-<option value="keycaps">Keycaps</option><option value="figures">مجسمات</option><option value="stickers">ستيكرات</option>
-<option value="keychains">ميداليات مفاتيح</option><option value="Paintings">لوحات</option><option value="others">أخرى</option>
-</select>
-<label>الصورة</label>
-<input id="image" type="file" accept="image/*">
-<div class="preview" id="preview">اختر صورة للمنتج</div>
-<div class="small" id="sizeInfo"></div>
-<button class="primary" id="saveBtn">💾 حفظ المنتج</button>
-<button class="ghost" id="cancelBtn" style="display:none;width:100%;margin-top:8px">إلغاء التعديل</button>
-<div class="status" id="status"></div>
-</section>
+  <div class="grid">
+    <section class="panel">
+      <h2 id="formTitle">➕ إضافة منتج</h2>
+      <label>اسم المنتج</label>
+      <input id="name" placeholder="مثلاً: ميدالية رزدنت ايفل">
+      <label>السعر</label>
+      <input id="price" placeholder="مثلاً: 15,000 د.ع">
+      <label>التصنيف</label>
+      <select id="category">
+        <option value="weapons">أسلحة</option>
+        <option value="masks">أقنعة</option>
+        <option value="stands">ستاندات</option>
+        <option value="keycaps">Keycaps</option>
+        <option value="figures">مجسمات</option>
+        <option value="stickers">ستيكرات</option>
+        <option value="keychains">ميداليات مفاتيح</option>
+        <option value="Paintings">لوحات</option>
+        <option value="others">أخرى</option>
+      </select>
+      <label>الصورة</label>
+      <input id="image" type="file" accept="image/*">
+      <div class="preview" id="preview">اختر صورة للمنتج</div>
+      <div class="small" id="sizeInfo"></div>
+      <button class="primary" id="saveBtn">💾 حفظ المنتج</button>
+      <button class="ghost" id="cancelBtn" style="display:none;width:100%;margin-top:8px">إلغاء التعديل</button>
+      <div class="status" id="status"></div>
+    </section>
 
-<section class="panel">
-<h2>📦 المنتجات</h2>
-<div class="toolbar">
-<input id="search" placeholder="🔍 ابحث عن منتج...">
-<button class="secondary" id="exportBtn">⬇️ تصدير</button>
-<button class="secondary" id="importBtn">⬆️ استيراد</button>
-<input id="importFile" type="file" accept=".json" style="display:none">
-</div>
-<div id="list"></div>
-</section>
+    <section class="panel">
+      <h2>📦 المنتجات</h2>
+      <div class="toolbar">
+        <input id="search" placeholder="🔍 ابحث عن منتج...">
+        <button class="secondary" id="refreshBtn">🔄 تحديث</button>
+      </div>
+      <div id="list"></div>
+    </section>
+  </div>
 </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const KEY='dathiun_products_v1';
-let products=JSON.parse(localStorage.getItem(KEY)||'[]');
-let editId=null, imageData='';
+const SUPABASE_URL = 'https://sxnsqbsdtnhaiootnrcx.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_RgzROER9zDcoMIceT95FPw_P5czLDqL';
+const BUCKET = 'product-images';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-const $=id=>document.getElementById(id);
-function save(){localStorage.setItem(KEY,JSON.stringify(products));render()}
-function escapeHTML(s=''){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-function compress(file,max=1200,quality=.82){
- return new Promise((resolve,reject)=>{
-  const r=new FileReader();
-  r.onload=e=>{
-   const img=new Image();
-   img.onload=()=>{
-    const scale=Math.min(1,max/img.width),c=document.createElement('canvas');
-    c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);
-    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-    resolve(c.toDataURL('image/jpeg',quality));
-   };img.onerror=reject;img.src=e.target.result;
-  };r.onerror=reject;r.readAsDataURL(file);
- })
+let products = [];
+let editId = null;
+let imageFile = null;
+let oldImageUrl = '';
+
+const $ = id => document.getElementById(id);
+function escapeHTML(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+
+function setStatus(msg, ok=false){
+  $('status').textContent = msg;
+  $('status').style.color = ok ? '#7dff8a' : '#aaa';
 }
-$('image').onchange=async e=>{
- const f=e.target.files[0];if(!f)return;
- $('status').textContent='جاري ضغط الصورة...';
- imageData=await compress(f);
- $('preview').innerHTML='<img src="'+imageData+'">';
- $('sizeInfo').textContent='الحجم الأصلي: '+(f.size/1024/1024).toFixed(2)+' MB — الصورة مضغوطة وجاهزة';
- $('status').textContent='تم ضغط الصورة ✅';
+
+function setLoginStatus(msg, ok=false){
+  $('loginStatus').textContent = msg;
+  $('loginStatus').style.color = ok ? '#7dff8a' : '#ff7777';
+}
+
+function compressImage(file,max=1200,quality=.82){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        const scale=Math.min(1,max/img.width);
+        const c=document.createElement('canvas');
+        c.width=Math.max(1,Math.round(img.width*scale));
+        c.height=Math.max(1,Math.round(img.height*scale));
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        c.toBlob(blob=>{
+          if(!blob)return reject(new Error('تعذر ضغط الصورة'));
+          resolve(blob);
+        },'image/jpeg',quality);
+      };
+      img.onerror=()=>reject(new Error('الصورة غير صالحة'));
+      img.src=e.target.result;
+    };
+    r.onerror=()=>reject(new Error('تعذر قراءة الصورة'));
+    r.readAsDataURL(file);
+  });
+}
+
+function filePathFromPublicUrl(url){
+  const marker = `/storage/v1/object/public/${BUCKET}/`;
+  const i = (url || '').indexOf(marker);
+  return i >= 0 ? url.slice(i + marker.length) : null;
+}
+
+async function uploadImage(file){
+  const blob = await compressImage(file);
+  const path = `products/${crypto.randomUUID()}.jpg`;
+  const {error} = await db.storage.from(BUCKET).upload(path, blob, {
+    contentType:'image/jpeg',
+    upsert:false,
+    cacheControl:'31536000'
+  });
+  if(error) throw error;
+  const {data} = db.storage.from(BUCKET).getPublicUrl(path);
+  return {url:data.publicUrl,path};
+}
+
+async function deleteImage(url){
+  const path=filePathFromPublicUrl(url);
+  if(!path)return;
+  const {error}=await db.storage.from(BUCKET).remove([path]);
+  if(error) console.warn('Image delete:',error.message);
+}
+
+$('loginBtn').onclick = async ()=>{
+  const email=$('email').value.trim(), password=$('password').value;
+  if(!email || !password){setLoginStatus('اكتب الإيميل وكلمة المرور');return}
+  $('loginBtn').disabled=true;
+  setLoginStatus('جاري تسجيل الدخول...',true);
+  const {error}=await db.auth.signInWithPassword({email,password});
+  $('loginBtn').disabled=false;
+  if(error){setLoginStatus('فشل تسجيل الدخول: '+error.message);return}
+  setLoginStatus('تم الدخول ✅',true);
 };
-$('saveBtn').onclick=()=>{
- const name=$('name').value.trim(),price=$('price').value.trim(),category=$('category').value;
- if(!name||!price){$('status').textContent='اكتب اسم المنتج والسعر أولاً';return}
- if(editId){
-  const p=products.find(x=>x.id===editId);p.name=name;p.price=price;p.category=category;if(imageData)p.image=imageData;
-  $('status').textContent='تم تعديل المنتج ✅';
- }else{
-  if(!imageData){$('status').textContent='اختر صورة المنتج أولاً';return}
-  products.unshift({id:Date.now().toString(),name,price,category,image:imageData,visible:true});
-  $('status').textContent='تمت إضافة المنتج ✅';
- }
- save();resetForm();
+
+$('logoutBtn').onclick = async ()=>{
+  await db.auth.signOut();
 };
+
+$('image').onchange = async e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  try{
+    imageFile=f;
+    setStatus('جاري ضغط الصورة...');
+    const blob=await compressImage(f);
+    const previewUrl=URL.createObjectURL(blob);
+    $('preview').innerHTML='<img src="'+previewUrl+'">';
+    $('sizeInfo').textContent='الحجم الأصلي: '+(f.size/1024/1024).toFixed(2)+' MB — بعد الضغط: '+(blob.size/1024/1024).toFixed(2)+' MB';
+    setStatus('الصورة جاهزة للرفع ✅',true);
+  }catch(e){setStatus('خطأ بالصورة: '+e.message)}
+};
+
+$('saveBtn').onclick = async ()=>{
+  const name=$('name').value.trim(), price=$('price').value.trim(), category=$('category').value;
+  if(!name||!price){setStatus('اكتب اسم المنتج والسعر أولاً');return}
+  $('saveBtn').disabled=true;
+  try{
+    let imageUrl=oldImageUrl;
+    let newImagePath=null;
+
+    if(imageFile){
+      setStatus('جاري ضغط ورفع الصورة...');
+      const up=await uploadImage(imageFile);
+      imageUrl=up.url;
+      newImagePath=up.path;
+    }
+
+    if(editId){
+      const {error}=await db.from('products').update({
+        name,price,category,image:imageUrl
+      }).eq('id',editId);
+      if(error){
+        if(newImagePath) await deleteImage(imageUrl);
+        throw error;
+      }
+      if(imageFile && oldImageUrl) await deleteImage(oldImageUrl);
+      setStatus('تم تعديل المنتج وحفظه أونلاين ✅',true);
+    }else{
+      if(!imageUrl){setStatus('اختر صورة المنتج أولاً');$('saveBtn').disabled=false;return}
+      const {error}=await db.from('products').insert({
+        name,price,category,image:imageUrl,visible:true
+      });
+      if(error){
+        if(newImagePath) await deleteImage(imageUrl);
+        throw error;
+      }
+      setStatus('تمت إضافة المنتج وحفظه أونلاين ✅',true);
+    }
+    resetForm();
+    await loadProducts();
+  }catch(e){
+    setStatus('حدث خطأ: '+(e.message || e));
+  }
+  $('saveBtn').disabled=false;
+};
+
 $('cancelBtn').onclick=resetForm;
-function resetForm(){editId=null;imageData='';$('name').value='';$('price').value='';$('image').value='';$('preview').textContent='اختر صورة للمنتج';$('sizeInfo').textContent='';$('formTitle').textContent='➕ إضافة منتج';$('saveBtn').textContent='💾 حفظ المنتج';$('cancelBtn').style.display='none'}
-function edit(id){
- const p=products.find(x=>x.id===id);if(!p)return;editId=id;$('name').value=p.name;$('price').value=p.price;$('category').value=p.category;imageData=p.image;$('preview').innerHTML='<img src="'+p.image+'">';$('formTitle').textContent='✏️ تعديل منتج';$('saveBtn').textContent='💾 حفظ التعديل';$('cancelBtn').style.display='block';scrollTo({top:0,behavior:'smooth'})
+
+function resetForm(){
+  editId=null;imageFile=null;oldImageUrl='';
+  $('name').value='';$('price').value='';$('category').value='weapons';
+  $('image').value='';$('preview').textContent='اختر صورة للمنتج';$('sizeInfo').textContent='';
+  $('formTitle').textContent='➕ إضافة منتج';
+  $('saveBtn').textContent='💾 حفظ المنتج';
+  $('cancelBtn').style.display='none';
 }
-function toggle(id){const p=products.find(x=>x.id===id);p.visible=!p.visible;save()}
-function del(id){if(confirm('حذف هذا المنتج نهائياً؟')){products=products.filter(x=>x.id!==id);save()}}
+
+function editProduct(id){
+  const p=products.find(x=>String(x.id)===String(id));
+  if(!p)return;
+  editId=p.id;imageFile=null;oldImageUrl=p.image||'';
+  $('name').value=p.name||'';$('price').value=p.price||'';$('category').value=p.category||'others';
+  $('image').value='';
+  $('preview').innerHTML=p.image?'<img src="'+escapeHTML(p.image)+'">':'لا توجد صورة';
+  $('sizeInfo').textContent='اترك الصورة كما هي إذا لا تريد تغييرها';
+  $('formTitle').textContent='✏️ تعديل منتج';
+  $('saveBtn').textContent='💾 حفظ التعديل';
+  $('cancelBtn').style.display='block';
+  scrollTo({top:0,behavior:'smooth'});
+}
+
+async function toggleProduct(id){
+  const p=products.find(x=>String(x.id)===String(id));
+  if(!p)return;
+  const {error}=await db.from('products').update({visible:!p.visible}).eq('id',id);
+  if(error){setStatus('تعذر تغيير الظهور: '+error.message);return}
+  await loadProducts();
+}
+
+async function deleteProduct(id){
+  const p=products.find(x=>String(x.id)===String(id));
+  if(!p)return;
+  if(!confirm('حذف هذا المنتج نهائياً؟'))return;
+  setStatus('جاري الحذف...');
+  const {error}=await db.from('products').delete().eq('id',id);
+  if(error){setStatus('تعذر حذف المنتج: '+error.message);return}
+  if(p.image) await deleteImage(p.image);
+  await loadProducts();
+  setStatus('تم حذف المنتج ✅',true);
+}
+
+async function loadProducts(){
+  $('list').innerHTML='<div style="text-align:center;color:#777;padding:35px">جاري تحميل المنتجات...</div>';
+  const {data,error}=await db.from('products').select('*').order('created_at',{ascending:false});
+  if(error){
+    $('list').innerHTML='<div style="text-align:center;color:#ff7777;padding:35px">تعذر تحميل المنتجات<br>'+escapeHTML(error.message)+'</div>';
+    return;
+  }
+  products=data||[];
+  render();
+}
+
 function render(){
- const q=$('search').value.toLowerCase();const arr=products.filter(p=>(p.name+' '+p.price).toLowerCase().includes(q));
- $('list').innerHTML=arr.length?arr.map(p=>`<div class="product ${p.visible?'':'hidden'}">
- <img src="${p.image}" alt=""><div><h3>${escapeHTML(p.name)}</h3><div class="meta">${escapeHTML(p.price)} · <span class="badge">${escapeHTML(p.category)}</span> · ${p.visible?'ظاهر':'مخفي'}</div></div>
- <div class="actions"><button class="secondary" onclick="edit('${p.id}')">✏️</button><button class="secondary" onclick="toggle('${p.id}')">${p.visible?'👁️ إخفاء':'👁️ إظهار'}</button><button class="danger" onclick="del('${p.id}')">🗑️</button></div></div>`).join(''):'<div style="text-align:center;color:#777;padding:35px">لا توجد منتجات محفوظة بعد</div>';
+  const q=$('search').value.toLowerCase().trim();
+  const arr=products.filter(p=>(String(p.name||'')+' '+String(p.price||'')+' '+String(p.category||'')).toLowerCase().includes(q));
+  $('list').innerHTML=arr.length ? arr.map(p=>`
+    <div class="product ${p.visible?'':'hidden'}">
+      <img src="${escapeHTML(p.image||'')}" alt="">
+      <div>
+        <h3>${escapeHTML(p.name)}</h3>
+        <div class="meta">${escapeHTML(p.price)} · <span class="badge">${escapeHTML(p.category)}</span> · ${p.visible?'ظاهر':'مخفي'}</div>
+      </div>
+      <div class="actions">
+        <button class="secondary" onclick="editProduct('${String(p.id).replace(/'/g,"\\'")}')">✏️</button>
+        <button class="secondary" onclick="toggleProduct('${String(p.id).replace(/'/g,"\\'")}')">${p.visible?'👁️ إخفاء':'👁️ إظهار'}</button>
+        <button class="danger" onclick="deleteProduct('${String(p.id).replace(/'/g,"\\'")}')">🗑️</button>
+      </div>
+    </div>`).join('') :
+    '<div style="text-align:center;color:#777;padding:35px">لا توجد منتجات بعد</div>';
 }
+
 $('search').oninput=render;
-$('exportBtn').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(products)],{type:'application/json'}));a.download='dathiun-products.json';a.click()}
-$('importBtn').onclick=()=>$('importFile').click();
-$('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{products=JSON.parse(r.result);save();$('status').textContent='تم الاستيراد ✅'}catch{$('status').textContent='ملف غير صالح'}};r.readAsText(f)}
-render();
+$('refreshBtn').onclick=loadProducts;
+
+db.auth.onAuthStateChange((event,session)=>{
+  if(session){
+    $('loginView').style.display='none';
+    $('adminView').style.display='block';
+    loadProducts();
+  }else{
+    $('adminView').style.display='none';
+    $('loginView').style.display='block';
+  }
+});
+
+(async()=>{
+  const {data:{session}}=await db.auth.getSession();
+  if(session){
+    $('loginView').style.display='none';
+    $('adminView').style.display='block';
+    await loadProducts();
+  }
+})();
 </script>
 </body>
 </html>
